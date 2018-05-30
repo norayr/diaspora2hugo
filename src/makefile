@@ -6,4 +6,4 @@ all:
 		../lists/strutils.Mod \
 		../lists/List.Mod \
 		../lists/StringList.Mod \
-		../postgre/postgre.Mod \
+		../postgres/postgres.Mod \

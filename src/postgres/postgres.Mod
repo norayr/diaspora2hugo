@@ -3,7 +3,8 @@ MODULE postgres;
 IMPORT Sys, Strings;
 
 VAR
-  user, database: Sys.string;
+  user-, database-: Sys.string;
+  query-: Sys.string;
 
 PROCEDURE setUser*(VAR s: ARRAY OF CHAR);
 BEGIN
@@ -16,8 +17,6 @@ BEGIN
 END setDatabase;
 
 PROCEDURE constructQuery(VAR s: ARRAY OF CHAR);
-  VAR
-    query: Sys.string;
 BEGIN
   query := "psql -U ";
   Strings.Append(user, query);
