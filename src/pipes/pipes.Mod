@@ -8,6 +8,8 @@ MODULE pipes;
   VAR
     SeekSet, SeekCur, SeekEnd, result : INTEGER;
 
+PROCEDURE -Astdio '#include <stdio.h>';
+
 PROCEDURE -popen (command, modes : ARRAY OF CHAR) : LONGINT "popen((char*)command, (char*)modes)";
 
 PROCEDURE Popen*(VAR command, modes: ARRAY OF CHAR): Platform.FileHandle;
