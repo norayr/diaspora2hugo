@@ -28,4 +28,6 @@ BEGIN
   Strings.Append('"', query);
 END constructQuery;
 
+BEGIN
+  user := "postgres";
 END postgres.
