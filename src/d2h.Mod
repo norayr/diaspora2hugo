@@ -1,6 +1,6 @@
 MODULE d2h;
 IMPORT Out,
-       postgres;
+       postgres, pipes;
 
 
 
@@ -12,4 +12,5 @@ BEGIN
 
   Out.String(postgres.query); Out.Ln;
 
+  pipes.Popen("ls");
 END d2h.

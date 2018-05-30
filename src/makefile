@@ -7,6 +7,7 @@ all:
 		../lists/List.Mod \
 		../lists/StringList.Mod \
 		../postgres/postgres.Mod \
+		../pipes/pipes.Mod \
 		../d2h.Mod -m
 
 clean:
