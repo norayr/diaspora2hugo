@@ -6,17 +6,17 @@ VAR
   user-, database-: Sys.string;
   query-: Sys.string;
 
-PROCEDURE setUser*(VAR s: ARRAY OF CHAR);
+PROCEDURE setUser*(s: ARRAY OF CHAR);
 BEGIN
   user := s  
 END setUser;
 
-PROCEDURE setDatabase*(VAR s: ARRAY OF CHAR);
+PROCEDURE setDatabase*(s: ARRAY OF CHAR);
 BEGIN
   database := s
 END setDatabase;
 
-PROCEDURE constructQuery(VAR s: ARRAY OF CHAR);
+PROCEDURE constructQuery(s: ARRAY OF CHAR);
 BEGIN
   query := "psql -U ";
   Strings.Append(user, query);
