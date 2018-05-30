@@ -1,4 +1,4 @@
-MODULE postgre;
+MODULE postgres;
 
 IMPORT Sys, Strings;
 
@@ -28,5 +28,4 @@ BEGIN
   Strings.Append('"', query);
 END constructQuery;
 
-END postgre.
-
+END postgres.
