@@ -16,7 +16,7 @@ BEGIN
   database := s
 END setDatabase;
 
-PROCEDURE constructQuery(s: ARRAY OF CHAR);
+PROCEDURE constructQuery*(s: ARRAY OF CHAR);
 BEGIN
   query := "psql -U ";
   Strings.Append(user, query);
