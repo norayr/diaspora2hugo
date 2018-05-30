@@ -23,9 +23,9 @@ BEGIN
   Strings.Append(user, query);
   Strings.Append(" -d ", query);
   Strings.Append(database, query);
-  Strings.Append(" -c """, query);
+  Strings.Append(' -c "', query);
   Strings.Append(s, query);
-  Strings.Append("""", query);
+  Strings.Append('"', query);
 END constructQuery;
 
 END postgre.
