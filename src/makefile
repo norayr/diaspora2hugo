@@ -7,3 +7,6 @@ all:
 		../lists/List.Mod \
 		../lists/StringList.Mod \
 		../postgres/postgres.Mod \
+
+clean:
+		cd build && rm *
