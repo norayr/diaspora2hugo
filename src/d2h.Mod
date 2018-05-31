@@ -5,11 +5,9 @@ IMPORT Out, Platform,
 
 PROCEDURE test;
   VAR
-    cmd0, cmd1: ARRAY 5 OF CHAR;
-	f: Platform.FileHandle;
-	buf : ARRAY 5 OF CHAR;
-	res : INTEGER;
-	tmp : LONGINT;
+    cmd, out: ARRAY 32 OF CHAR;
+	f: pipes.Text;
+    ch : CHAR;
 BEGIN
 
   postgres.setUser("postgres");
@@ -18,17 +16,21 @@ BEGIN
 
   Out.String(postgres.query); Out.Ln;
 
-  cmd0 := "ls"; cmd1 := "r";
-  f := pipes.Popen(cmd0, cmd1);
-  tmp := 1;
-  res := Platform.ReadBuf(f, buf, tmp);
-  Out.Char(buf[0]); Out.Ln;
-  Out.Char(buf[0]); Out.Ln;
-  Out.Char(buf[0]); Out.Ln;
-  Out.Char(buf[0]); Out.Ln;
-
+  cmd := "ls -al";
+  NEW(f);
+  pipes.Popen(f, cmd, 'r');
+  REPEAT
+    pipes.ReadLine(f, out);
+    Out.String(out); Out.Ln;
+  UNTIL f.eof;
+  (*
+  REPEAT
+    pipes.Read(f, ch);
+    Out.Char(ch); Out.Ln;
+  UNTIL f.eof;
+  *)
 END test;
 
 BEGIN
-
+  test
 END d2h.

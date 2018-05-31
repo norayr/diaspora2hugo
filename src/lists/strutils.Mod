@@ -172,28 +172,29 @@ RETURN (pstr);
 END ExtractWord;
 
 PROCEDURE tokenize*(s : string; ch : CHAR) : strings;
-VAR strs : strings;
-pstr : pstring;
-l, n : INTEGER;
+VAR 
+  strs : strings;
+  pstr : pstring;
+  l, n : INTEGER;
 BEGIN
-n := WordCount(s, ch);
-NEW (strs, n);
-IF n = 1 THEN
-RemoveRightChars (s, ch);
-RemoveLeftChars (s, ch);
-strs^[0] := s;
-RETURN (strs);
-END;
-l := 0;
-REPEAT
-pstr := ExtractWord ( l+1, s, ch);
-strs^[l] := pstr^;
-INC(l);
-UNTIL l = n;
-RETURN (strs); 
+  n := WordCount(s, ch);
+  NEW (strs, n);
+  IF n = 1 THEN
+    RemoveRightChars (s, ch);
+    RemoveLeftChars (s, ch);
+    strs^[0] := s;
+    RETURN (strs);
+  END;
+  l := 0;
+  REPEAT
+    pstr := ExtractWord ( l+1, s, ch);
+    strs^[l] := pstr^;
+    INC(l);
+  UNTIL l = n;
+  RETURN (strs); 
 END tokenize;
 
-PROCEDURE Assign* (VAR src : ARRAY OF CHAR ; VAR dst : ARRAY OF CHAR); 
+PROCEDURE Assign* (src : ARRAY OF CHAR ; VAR dst : ARRAY OF CHAR); 
 VAR i, k : LONGINT;
 BEGIN
 IF LEN (src) < LEN(dst) THEN k := LEN(src) ELSE k := LEN(dst)  END;
@@ -202,7 +203,6 @@ dst[i] := src[i];
 END;
 dst[k-1] := 0X;
 END Assign;
-
 
 BEGIN
 
