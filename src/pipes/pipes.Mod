@@ -47,7 +47,7 @@ VAR
   i : INTEGER;
 BEGIN
   i := 0;
-  WHILE s[i] # 0X DO
+  WHILE s[i] # Ascii.nul DO
     Out.Int(i, 0); Out.Char(" "); Out.Char(s[i]); Out.Ln; INC(i)
   END
 END dumpChars;
@@ -102,14 +102,14 @@ BEGIN
   i := 0;
   REPEAT
     Read(f, ch);
-    IF f.eof OR (ch = 10X) OR (ch = 13X) THEN eol := TRUE END;
+    IF (ch = Ascii.cr) OR (ch = Ascii.lf) OR (i = LEN(s) - 1) OR f.eof THEN eol := TRUE END;
 	IF eol THEN
-	  s[i] := 0X
+	  s[i] := Ascii.nul
 	ELSE
 	  s[i] := ch
 	END;
 	INC(i)
-  UNTIL eol OR (i = LEN(s) - 1);
+  UNTIL eol;
 END ReadLine;
 
 PROCEDURE isEOF*(VAR(*CONST*) f: Text): BOOLEAN;

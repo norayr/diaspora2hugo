@@ -5,7 +5,7 @@ IMPORT Out, Platform,
 
 PROCEDURE test;
   VAR
-    cmd, out: ARRAY 32 OF CHAR;
+    cmd, out: ARRAY 64 OF CHAR;
 	f: pipes.Text;
     ch : CHAR;
 BEGIN
