@@ -1,6 +1,24 @@
 MODULE d2h;
 IMPORT Out, Args, Strings,
+       StringList,
        postgres;
+
+PROCEDURE list(VAR s : StringList.TStringList);
+VAR e : StringList.Node;
+       i : INTEGER;
+    L : StringList.TList;   
+BEGIN
+   NEW(e);
+   i := 0;
+   NEW(L);
+   L := s;
+   REPEAT
+      e := s.Get(L, i);
+      IF e # NIL THEN Out.String (e.obj(StringList.TString).str); Out.Ln END;
+      (*Out.String (e.string); Out.Ln;*)
+      INC(i);
+   UNTIL i = s.Count;
+END list;
 
 PROCEDURE help;
 BEGIN
@@ -22,12 +40,17 @@ END parseArgs;
 PROCEDURE getUserID(VAR username, userID: ARRAY OF CHAR);
 VAR
   cmd: ARRAY 64 OF CHAR;
+  strs: StringList.TStringList;
+  rsp : ARRAY 32 OF CHAR;
 BEGIN
   cmd := "SELECT id FROM users WHERE username='";
   Strings.Append(username, cmd);
   Strings.Append("';", cmd); 
   Out.String(cmd); Out.Ln;
-  postgres.query(cmd);
+  strs := postgres.query(cmd);
+  list(strs);
+  postgres.queryL(cmd, rsp);
+
 END getUserID;
 
 PROCEDURE main;

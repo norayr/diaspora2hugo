@@ -1,6 +1,6 @@
 MODULE postgres;
 
-IMPORT Sys, Strings, oocStrings2, Out, pipes;
+IMPORT Sys, Strings := oocStrings, Strings2 := oocStrings2, Out, pipes, StringList, strutils;
 
 VAR
   user-, database-: Sys.string;
@@ -18,7 +18,7 @@ BEGIN
   i := 0;
   REPEAT
     IF s[i] = "'" THEN
-	  oocStrings2.InsertChar('\', i, s);
+	  Strings2.InsertChar('\', i, s);
 	  INC(i)
 	END;
 	INC(i)
@@ -42,21 +42,50 @@ BEGIN
   Strings.Append('"', queryStr);
 END constructQuery;
 
-PROCEDURE query*(VAR cmd: ARRAY OF CHAR);
+PROCEDURE query*(VAR cmd: ARRAY OF CHAR): StringList.TStringList;
 VAR
   f: pipes.Text;
   out: ARRAY 64 OF CHAR;
+  strs: StringList.TStringList;
+  l : LONGINT;
 BEGIN
   constructQuery(cmd);
   Out.String(queryStr); Out.Ln;
   NEW(f);
+  strs := StringList.Create(); 
   pipes.Popen(f, queryStr, 'r');
   REPEAT
     pipes.ReadLine(f, out);
-    Out.String(out); Out.Ln;
-    Out.Ln
+    l := strs.AddString(strs, out);
   UNTIL f.eof;
+  RETURN strs
 END query;
+
+PROCEDURE queryL*(VAR cmd, rsp: ARRAY OF CHAR);
+VAR
+  f: pipes.Text;
+  out: ARRAY 64 OF CHAR;
+  strs: StringList.TStringList;
+  e : StringList.Node;
+  l : LONGINT;
+BEGIN
+  constructQuery(cmd);
+  Out.String(queryStr); Out.Ln;
+  NEW(f);
+  strs := StringList.Create(); 
+  pipes.Popen(f, queryStr, 'r');
+  REPEAT
+    pipes.ReadLine(f, out);
+    l := strs.AddString(strs, out);
+  UNTIL f.eof;
+  e := strs.Get(strs, l-3);
+  IF e # NIL THEN
+    Strings.Assign( (e.obj(StringList.TString).str), rsp);
+	strutils.RemoveLeftChars(rsp, ' ');
+	strutils.RemoveRightChars(rsp, ' ');
+    Out.String(rsp); Out.Ln
+  END;
+END queryL;
 
 BEGIN
   user := "postgres";
