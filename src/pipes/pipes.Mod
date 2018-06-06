@@ -18,9 +18,6 @@ MODULE pipes;
 	 eof-  : BOOLEAN;
    END;
 
-  VAR
-    SeekSet, SeekCur, SeekEnd, result : INTEGER;
-
 PROCEDURE -Astdio '#include <stdio.h>';
 
 
@@ -64,15 +61,16 @@ BEGIN
   cmd := OberonStringtoPchar(command);*)
   strutils.Assign(command, cmd);
   strutils.Assign("r", md);
-  dumpChars(md); dumpChars(cmd);
+  (*dumpChars(md); dumpChars(cmd);*)
   t.text := popen(cmd, md);
-  Out.String("yay"); Out.Ln;
   t.eof := FALSE;
 END Popen;
 
 (*PROCEDURE pclose* (stream : LONGINT) : LONGINT "close(fd)";*)
 
-PROCEDURE Pclose* (stream: Platform.FileHandle);
+PROCEDURE Pclose* (stream: Platform.FileHandle): LONGINT;
+VAR
+  result: LONGINT;
 BEGIN
   result := Platform.Close(stream)
 END Pclose;
@@ -119,9 +117,6 @@ END isEOF;
 
 
 BEGIN
-	SeekSet := Platform.SeekSet;
-  	SeekCur := Platform.SeekCur;
-	SeekEnd := Platform.SeekEnd;
 
 
 END pipes.

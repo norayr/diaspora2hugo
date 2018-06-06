@@ -22,6 +22,7 @@ BEGIN
   REPEAT
     pipes.ReadLine(f, out);
     Out.String(out); Out.Ln;
+	Out.Ln
   UNTIL f.eof;
   (*
   REPEAT
