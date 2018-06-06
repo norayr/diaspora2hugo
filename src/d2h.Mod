@@ -1,37 +1,23 @@
 MODULE d2h;
-IMPORT Out, Platform,
-       postgres, pipes;
+IMPORT Out, Args,
+       postgres;
 
 
-PROCEDURE test;
-  VAR
-    cmd, out: ARRAY 64 OF CHAR;
-	f: pipes.Text;
-    ch : CHAR;
+
+PROCEDURE getUserID(VAR userID: ARRAY OF CHAR);
+VAR
+  cmd: ARRAY 64 OF CHAR;
 BEGIN
+  cmd := "SELECT id FROM users WHERE username='norayr';"; 
+END getUserID;
 
-  postgres.setUser("postgres");
-  postgres.setDatabase("diaspora_production");
-  postgres.constructQuery("SELECT id from posts WHERE author_id='1' AND type='StatusMessage' AND public='t';");
+PROCEDURE main;
+ VAR userID: ARRAY 5 OF CHAR;
+BEGIN
+  getUserID(userID);
 
-  Out.String(postgres.query); Out.Ln;
-
-  cmd := "ls -al";
-  NEW(f);
-  pipes.Popen(f, cmd, 'r');
-  REPEAT
-    pipes.ReadLine(f, out);
-    Out.String(out); Out.Ln;
-	Out.Ln
-  UNTIL f.eof;
-  (*
-  REPEAT
-    pipes.Read(f, ch);
-    Out.Char(ch); Out.Ln;
-  UNTIL f.eof;
-  *)
-END test;
+END main;
 
 BEGIN
-  test
+  main;
 END d2h.
