@@ -12,8 +12,32 @@ BEGIN
   Strings.Append("' AND type='StatusMessage' AND public='f';", cmd);
   Out.String(cmd); Out.Ln;
   strs := postgres.query(cmd);
+  strs.Delete(strs, 0);
+  strs.Delete(strs, 0);
+  strs.Delete(strs, strs.Count-1);
+  strs.Delete(strs, strs.Count-1);
+  strs.Delete(strs, strs.Count-1);
   RETURN(strs);
 END getListOfPosts;
+
+PROCEDURE getText*(postid: ARRAY OF CHAR): StringList.TStringList;
+VAR
+  cmd: ARRAY 256 OF CHAR;
+  strs: StringList.TStringList;
+BEGIN
+  cmd := "SELECT text from posts WHERE id='";
+  Strings.Append(postid, cmd);
+  Strings.Append("';", cmd);
+  Out.String(cmd); Out.Ln;
+  strs := postgres.query(cmd);
+  strs := postgres.query(cmd);
+  strs.Delete(strs, 0);
+  strs.Delete(strs, 0);
+  strs.Delete(strs, strs.Count-1);
+  strs.Delete(strs, strs.Count-1);
+  strs.Delete(strs, strs.Count-1);
+  RETURN(strs);
+END getText;
 
 PROCEDURE getRaw*(VAR username, userID: ARRAY OF CHAR);
 VAR

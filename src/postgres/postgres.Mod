@@ -8,7 +8,7 @@ VAR
 
 PROCEDURE setUser*(s: ARRAY OF CHAR);
 BEGIN
-  user := s  
+  user := s
 END setUser;
 
 PROCEDURE screen(VAR s: ARRAY OF CHAR);
@@ -18,10 +18,10 @@ BEGIN
   i := 0;
   REPEAT
     IF s[i] = "'" THEN
-	  Strings2.InsertChar('\', i, s);
-	  INC(i)
-	END;
-	INC(i)
+      Strings2.InsertChar('\', i, s);
+      INC(i)
+    END;
+    INC(i)
   UNTIL i = Strings.Length(s);
 END screen;
 
@@ -45,17 +45,19 @@ END constructQuery;
 PROCEDURE query*(VAR cmd: ARRAY OF CHAR): StringList.TStringList;
 VAR
   f: pipes.Text;
-  out: ARRAY 64 OF CHAR;
+  out: ARRAY 256 OF CHAR;
   strs: StringList.TStringList;
   l : LONGINT;
 BEGIN
   constructQuery(cmd);
   Out.String(queryStr); Out.Ln;
   NEW(f);
-  strs := StringList.Create(); 
+  strs := StringList.Create();
   pipes.Popen(f, queryStr, 'r');
   REPEAT
     pipes.ReadLine(f, out);
+    strutils.RemoveLeftChars(out, ' ');
+    strutils.RemoveRightChars(out, ' ');
     l := strs.AddString(strs, out);
   UNTIL f.eof;
   RETURN strs
@@ -72,7 +74,7 @@ BEGIN
   constructQuery(cmd);
   Out.String(queryStr); Out.Ln;
   NEW(f);
-  strs := StringList.Create(); 
+  strs := StringList.Create();
   pipes.Popen(f, queryStr, 'r');
   REPEAT
     pipes.ReadLine(f, out);
@@ -81,8 +83,8 @@ BEGIN
   e := strs.Get(strs, l-3);
   IF e # NIL THEN
     Strings.Assign( (e.obj(StringList.TString).str), rsp);
-	strutils.RemoveLeftChars(rsp, ' ');
-	strutils.RemoveRightChars(rsp, ' ');
+    strutils.RemoveLeftChars(rsp, ' ');
+    strutils.RemoveRightChars(rsp, ' ');
     Out.String(rsp); Out.Ln
   END;
 END queryL;

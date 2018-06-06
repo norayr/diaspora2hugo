@@ -1,6 +1,6 @@
 MODULE Sys;
 
-CONST StrLen = 255;
+CONST StrLen = 1024;
 
 TYPE  string* = ARRAY StrLen OF CHAR;
      strings* = POINTER TO ARRAY OF string;

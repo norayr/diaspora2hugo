@@ -1,7 +1,7 @@
 MODULE d2h;
 IMPORT Out, Args,
        StringList,
-	   diasporadb;
+       diasporadb;
 
 PROCEDURE list(VAR s : StringList.TStringList);
 VAR e : StringList.Node;
@@ -40,11 +40,14 @@ END parseArgs;
 PROCEDURE main;
  VAR userID: ARRAY 5 OF CHAR;
  username: ARRAY 16 OF CHAR;
- postIDs: StringList.TStringList;
+ postIDs, text: StringList.TStringList;
 BEGIN
   parseArgs(username);
   diasporadb.getUserID(username, userID);
   postIDs := diasporadb.getListOfPosts(userID);
+  list(postIDs);
+  text := diasporadb.getText("455122");
+  list(text);
 END main;
 
 BEGIN
