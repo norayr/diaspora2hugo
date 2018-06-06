@@ -53,7 +53,7 @@ PROCEDURE -popen (VAR command, modes : ARRAY OF CHAR) : PtrFile "popen((char*)co
 
 PROCEDURE Popen*(VAR t: Text; VAR command: ARRAY OF CHAR; mode: CHAR);
   VAR
-	cmd : ARRAY 32 OF CHAR;
+	cmd : ARRAY 256 OF CHAR;
 	md  : ARRAY 2 OF CHAR;
 BEGIN
   (*NEW(md, 2);

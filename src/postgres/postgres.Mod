@@ -1,6 +1,6 @@
 MODULE postgres;
 
-IMPORT Sys, Strings, Out, pipes;
+IMPORT Sys, Strings, oocStrings2, Out, pipes;
 
 VAR
   user-, database-: Sys.string;
@@ -11,18 +11,33 @@ BEGIN
   user := s  
 END setUser;
 
+PROCEDURE screen(VAR s: ARRAY OF CHAR);
+VAR
+  i: INTEGER;
+BEGIN
+  i := 0;
+  REPEAT
+    IF s[i] = "'" THEN
+	  oocStrings2.InsertChar('\', i, s);
+	  INC(i)
+	END;
+	INC(i)
+  UNTIL i = Strings.Length(s);
+END screen;
+
 PROCEDURE setDatabase*(s: ARRAY OF CHAR);
 BEGIN
   database := s
 END setDatabase;
 
-PROCEDURE constructQuery*(s: ARRAY OF CHAR);
+PROCEDURE constructQuery(s: ARRAY OF CHAR);
 BEGIN
   queryStr := "psql -U ";
   Strings.Append(user, queryStr);
   Strings.Append(" -d ", queryStr);
   Strings.Append(database, queryStr);
   Strings.Append(' -c "', queryStr);
+  (*screen(s);*)
   Strings.Append(s, queryStr);
   Strings.Append('"', queryStr);
 END constructQuery;
@@ -33,6 +48,7 @@ VAR
   out: ARRAY 64 OF CHAR;
 BEGIN
   constructQuery(cmd);
+  Out.String(queryStr); Out.Ln;
   NEW(f);
   pipes.Popen(f, queryStr, 'r');
   REPEAT
