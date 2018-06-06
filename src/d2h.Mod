@@ -37,11 +37,10 @@ BEGIN
  END
 END parseArgs;
 
-PROCEDURE getUserID(VAR username, userID: ARRAY OF CHAR);
+PROCEDURE getRaw(VAR username, userID: ARRAY OF CHAR);
 VAR
   cmd: ARRAY 64 OF CHAR;
   strs: StringList.TStringList;
-  rsp : ARRAY 32 OF CHAR;
 BEGIN
   cmd := "SELECT id FROM users WHERE username='";
   Strings.Append(username, cmd);
@@ -49,9 +48,20 @@ BEGIN
   Out.String(cmd); Out.Ln;
   strs := postgres.query(cmd);
   list(strs);
-  postgres.queryL(cmd, rsp);
+END getRaw;
 
+PROCEDURE getUserID(VAR username, userID: ARRAY OF CHAR);
+VAR
+  cmd: ARRAY 64 OF CHAR;
+  rsp : ARRAY 32 OF CHAR;
+BEGIN
+  cmd := "SELECT id FROM users WHERE username='";
+  Strings.Append(username, cmd);
+  Strings.Append("';", cmd); 
+  Out.String(cmd); Out.Ln;
+  postgres.queryL(cmd, rsp);
 END getUserID;
+
 
 PROCEDURE main;
  VAR userID: ARRAY 5 OF CHAR;
