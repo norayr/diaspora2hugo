@@ -1,12 +1,12 @@
 MODULE d2h;
-IMPORT Out, Args, Strings,
+IMPORT Out, Args,
        StringList,
-       postgres;
+	   diasporadb;
 
 PROCEDURE list(VAR s : StringList.TStringList);
 VAR e : StringList.Node;
        i : INTEGER;
-    L : StringList.TList;   
+    L : StringList.TList;
 BEGIN
    NEW(e);
    i := 0;
@@ -37,41 +37,14 @@ BEGIN
  END
 END parseArgs;
 
-PROCEDURE getRaw(VAR username, userID: ARRAY OF CHAR);
-VAR
-  cmd: ARRAY 64 OF CHAR;
-  strs: StringList.TStringList;
-BEGIN
-  cmd := "SELECT id FROM users WHERE username='";
-  Strings.Append(username, cmd);
-  Strings.Append("';", cmd); 
-  Out.String(cmd); Out.Ln;
-  strs := postgres.query(cmd);
-  list(strs);
-END getRaw;
-
-PROCEDURE getUserID(VAR username, userID: ARRAY OF CHAR);
-VAR
-  cmd: ARRAY 64 OF CHAR;
-  rsp : ARRAY 32 OF CHAR;
-BEGIN
-  cmd := "SELECT id FROM users WHERE username='";
-  Strings.Append(username, cmd);
-  Strings.Append("';", cmd); 
-  Out.String(cmd); Out.Ln;
-  postgres.queryL(cmd, rsp);
-END getUserID;
-
-
 PROCEDURE main;
  VAR userID: ARRAY 5 OF CHAR;
  username: ARRAY 16 OF CHAR;
+ postIDs: StringList.TStringList;
 BEGIN
   parseArgs(username);
-  postgres.setUser("diaspora");
-  postgres.setDatabase("diaspora_production");
-  getUserID(username, userID);
-
+  diasporadb.getUserID(username, userID);
+  postIDs := diasporadb.getListOfPosts(userID);
 END main;
 
 BEGIN

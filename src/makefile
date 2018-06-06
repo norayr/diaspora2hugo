@@ -8,6 +8,7 @@ all:
 		../lists/StringList.Mod \
 		../pipes/pipes.Mod \
 		../postgres/postgres.Mod \
+		../diaspora/diasporadb.Mod \
 		../d2h.Mod -m
 		cd build && voc ../tests.Mod -m
 clean:
