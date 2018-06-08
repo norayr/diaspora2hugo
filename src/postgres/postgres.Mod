@@ -45,7 +45,7 @@ END constructQuery;
 PROCEDURE query*(VAR cmd: ARRAY OF CHAR): StringList.TStringList;
 VAR
   f: pipes.Text;
-  out: ARRAY 256 OF CHAR;
+  out: Sys.string;
   strs: StringList.TStringList;
   l : LONGINT;
 BEGIN
@@ -66,7 +66,7 @@ END query;
 PROCEDURE queryL*(VAR cmd, rsp: ARRAY OF CHAR);
 VAR
   f: pipes.Text;
-  out: ARRAY 64 OF CHAR;
+  out: Sys.string;
   strs: StringList.TStringList;
   e : StringList.Node;
   l : LONGINT;
