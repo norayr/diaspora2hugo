@@ -20,6 +20,27 @@ BEGIN
   RETURN(strs);
 END getListOfPosts;
 
+PROCEDURE getCreationTime*(postid: ARRAY OF CHAR; VAR time: ARRAY OF CHAR);
+VAR
+  cmd: ARRAY 256 OF CHAR;
+  strs: StringList.TStringList;
+  e: StringList.Node;
+BEGIN
+  cmd := "SELECT created_at from posts WHERE id='";
+  Strings.Append(postid, cmd);
+  Strings.Append("';", cmd);
+  Out.String(cmd); Out.Ln;
+  strs := postgres.query(cmd);
+  strs := postgres.query(cmd);
+  strs.Delete(strs, 0);
+  strs.Delete(strs, 0);
+  strs.Delete(strs, strs.Count-1);
+  strs.Delete(strs, strs.Count-1);
+  strs.Delete(strs, strs.Count-1);
+  e := strs.Get(strs, strs.Count-1);
+  Strings.Assign(e.obj(StringList.TString).str, time);
+END getCreationTime;
+
 PROCEDURE getText*(postid: ARRAY OF CHAR): StringList.TStringList;
 VAR
   cmd: ARRAY 256 OF CHAR;

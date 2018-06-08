@@ -41,6 +41,7 @@ PROCEDURE main;
  VAR userID: ARRAY 5 OF CHAR;
  username: ARRAY 16 OF CHAR;
  postIDs, text: StringList.TStringList;
+ time: ARRAY 32 OF CHAR;
 BEGIN
   parseArgs(username);
   diasporadb.getUserID(username, userID);
@@ -48,6 +49,8 @@ BEGIN
   list(postIDs);
   text := diasporadb.getText("455122");
   list(text);
+  diasporadb.getCreationTime("455122", time);
+  Out.String(time); Out.Ln
 END main;
 
 BEGIN
