@@ -37,18 +37,26 @@ BEGIN
  END
 END parseArgs;
 
+PROCEDURE findTags(VAR text, tags: StringList.TStringList);
+
+BEGIN
+
+END findTags;
+
 PROCEDURE main;
  VAR userID: ARRAY 5 OF CHAR;
  username: ARRAY 16 OF CHAR;
- postIDs, text: StringList.TStringList;
+ postIDs, text, tags: StringList.TStringList;
  time: ARRAY 32 OF CHAR;
 BEGIN
   parseArgs(username);
   diasporadb.getUserID(username, userID);
-  postIDs := diasporadb.getListOfPosts(userID);
+  postIDs := diasporadb.getListOfPosts(userID, FALSE);
   list(postIDs);
   text := diasporadb.getText("455122");
   list(text);
+  tags := StringList.Create();
+  findTags(text, tags);
   diasporadb.getCreationTime("455122", time);
   Out.String(time); Out.Ln;
   time[10] := 'T';

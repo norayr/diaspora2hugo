@@ -2,7 +2,29 @@ MODULE diasporadb;
 
 IMPORT postgres, StringList, Strings := oocStrings, Out;
 
-PROCEDURE getListOfPosts*(VAR userid: ARRAY OF CHAR): StringList.TStringList;
+PROCEDURE getListOfPosts*(VAR userid: ARRAY OF CHAR; public : BOOLEAN): StringList.TStringList;
+VAR
+  cmd: ARRAY 128 OF CHAR;
+  strs: StringList.TStringList;
+BEGIN
+  cmd := "SELECT id from posts WHERE author_id='";
+  Strings.Append(userid, cmd);
+  IF public THEN
+    Strings.Append("' AND type='StatusMessage' AND public='t';", cmd)
+  ELSE
+  Strings.Append("' AND type='StatusMessage' AND public='f';", cmd)
+  END;
+  Out.String(cmd); Out.Ln;
+  strs := postgres.query(cmd);
+  strs.Delete(strs, 0);
+  strs.Delete(strs, 0);
+  strs.Delete(strs, strs.Count-1);
+  strs.Delete(strs, strs.Count-1);
+  strs.Delete(strs, strs.Count-1);
+  RETURN(strs);
+END getListOfPosts;
+
+PROCEDURE getListOfPrivatePosts*(VAR userid: ARRAY OF CHAR): StringList.TStringList;
 VAR
   cmd: ARRAY 128 OF CHAR;
   strs: StringList.TStringList;
@@ -18,7 +40,8 @@ BEGIN
   strs.Delete(strs, strs.Count-1);
   strs.Delete(strs, strs.Count-1);
   RETURN(strs);
-END getListOfPosts;
+END getListOfPrivatePosts;
+
 
 PROCEDURE getCreationTime*(postid: ARRAY OF CHAR; VAR time: ARRAY OF CHAR);
 VAR
