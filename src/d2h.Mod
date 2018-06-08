@@ -1,5 +1,5 @@
 MODULE d2h;
-IMPORT Out, Args,
+IMPORT Out, Args, Strings := oocStrings,
        StringList,
        diasporadb;
 
@@ -50,7 +50,10 @@ BEGIN
   text := diasporadb.getText("455122");
   list(text);
   diasporadb.getCreationTime("455122", time);
-  Out.String(time); Out.Ln
+  Out.String(time); Out.Ln;
+  time[10] := 'T';
+  Strings.Append("+04:00", time);
+  Out.String(time); Out.Ln;
 END main;
 
 BEGIN
