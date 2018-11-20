@@ -12,7 +12,7 @@ BEGIN
   IF public THEN
     Strings.Append("' AND type='StatusMessage' AND public='t';", cmd)
   ELSE
-  Strings.Append("' AND type='StatusMessage' AND public='f';", cmd)
+    Strings.Append("' AND type='StatusMessage' AND public='f';", cmd)
   END;
   Out.String(cmd); Out.Ln;
   strs := postgres.query(cmd);
