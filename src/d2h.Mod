@@ -46,23 +46,25 @@ PROCEDURE main;
  postIDs, text, tags: StringList.TStringList;
  time: ARRAY 32 OF CHAR;
  photoFull, photoScaled: ARRAY 128 OF CHAR;
+ testPid: ARRAY 12 OF CHAR;
 BEGIN
+  testPid := "3389030";
+  (*testPid := "455122");*)
   parseArgs(username);
   diasporadb.getUserID(username, userID);
   postIDs := diasporadb.getListOfPosts(userID, FALSE);
   list(postIDs);
-  text := diasporadb.getText("455122");
+  text := diasporadb.getText(testPid);
   list(text);
   tags := StringList.Create();
   tags := diasporaPost.findTags(text);
   list(tags);
-  diasporadb.getCreationTime("455122", time);
+  diasporadb.getCreationTime(testPid, time);
   Out.String(time); Out.Ln;
   time[10] := 'T';
   Strings.Append("+04:00", time);
   Out.String(time); Out.Ln;
-  (*diasporadb.getPhotoLinksByPostId("3389030", photoFull, photoScaled);*)
-  IF diasporadb.getPhotoLinksByPostId("455122", photoFull, photoScaled) THEN
+  IF diasporadb.getPhotoLinksByPostId(testPid, photoFull, photoScaled) THEN
     Out.String(photoFull); Out.Ln;
     Out.String(photoScaled); Out.Ln;
   ELSE

@@ -1,6 +1,6 @@
 MODULE diasporadb;
 
-IMPORT postgres, StringList, Strings := oocStrings, Out;
+IMPORT postgres, StringList, Strings := oocStrings, strutils, Out;
 
 PROCEDURE getListOfPosts*(VAR userid: ARRAY OF CHAR; public : BOOLEAN): StringList.TStringList;
 VAR
@@ -48,6 +48,7 @@ VAR
   cmd: ARRAY 256 OF CHAR;
   strs: StringList.TStringList;
   e: StringList.Node;
+  p: INTEGER;
 BEGIN
   cmd := "SELECT created_at from posts WHERE id='";
   Strings.Append(postid, cmd);
@@ -62,6 +63,11 @@ BEGIN
   strs.Delete(strs, strs.Count-1);
   e := strs.Get(strs, strs.Count-1);
   Strings.Assign(e.obj(StringList.TString).str, time);
+  (* now check if the line contains dot, then cut everything from right till the dot included *)
+  p := strutils.Pos('.', time, 0);
+  IF p # 0 THEN
+    Strings.Delete(time, p, Strings.Length(time)-p);
+  END
 END getCreationTime;
 
 PROCEDURE getText*(postid: ARRAY OF CHAR): StringList.TStringList;
