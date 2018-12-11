@@ -148,11 +148,11 @@ BEGIN
    getPostGuid(pid, statusMessageGuid);
    getPhotoPath(statusMessageGuid, photoPath);
    getPhotoName(statusMessageGuid, photoName);
-   COPY(photoPath, full);
-   Strings.Assign(full, photoName);
-   COPY(photoName, scaled);
-   Strings.Assign("scaled_full_", scaled);
-   Strings.Assign(photoName, scaled);
+   Strings.Assign(photoPath, full);
+   Strings.Append(photoName, full);
+   Strings.Assign(photoPath, scaled);
+   Strings.Append("scaled_full_", scaled);
+   Strings.Append(photoName, scaled);
 END getPhotoLinksByPostId;
 
 BEGIN
