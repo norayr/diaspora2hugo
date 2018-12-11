@@ -149,7 +149,6 @@ BEGIN
       Strings.Append("_", filename);
       Strings.Append(postID, filename);
       Strings.Append("_spyurk.md", filename);
-      Strings.Append(postID, filename);
       F := Files.New(filename);
       IF F # NIL THEN
         Files.Set(R, F, 0);
