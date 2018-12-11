@@ -106,7 +106,16 @@ BEGIN
   postgres.queryL(cmd, userID);
 END getUserID;
 
-
+PROCEDURE getPostGuid*(VAR id, guid: ARRAY OF CHAR);
+VAR
+  cmd: ARRAY 64 OF CHAR;
+BEGIN
+  cmd := "SELECT guid FROM posts WHERE id='";
+  Strings.Append(id, cmd);
+  Strings.Append("';", cmd);
+  Out.String(cmd); Out.Ln;
+  postgres.queryL(cmd, guid);
+END getPostGuid;
 
 BEGIN
   postgres.setUser("diaspora");
