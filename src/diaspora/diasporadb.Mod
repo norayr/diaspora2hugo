@@ -117,6 +117,44 @@ BEGIN
   postgres.queryL(cmd, guid);
 END getPostGuid;
 
+PROCEDURE getPhotoPath*(VAR guid, photoPath: ARRAY OF CHAR);
+VAR
+  cmd: ARRAY 64 OF CHAR;
+BEGIN
+  cmd := "SELECT remote_photo_path FROM photos WHERE status_message_guid='";
+  Strings.Append(guid, cmd);
+  Strings.Append("';", cmd);
+  Out.String(cmd); Out.Ln;
+  postgres.queryL(cmd, photoPath);
+END getPhotoPath;
+
+PROCEDURE getPhotoName*(VAR guid, photoName: ARRAY OF CHAR);
+VAR
+  cmd: ARRAY 64 OF CHAR;
+BEGIN
+  cmd := "SELECT remote_photo_path FROM photos WHERE status_message_guid='";
+  Strings.Append(guid, cmd);
+  Strings.Append("';", cmd);
+  Out.String(cmd); Out.Ln;
+  postgres.queryL(cmd, photoName);
+END getPhotoName;
+
+PROCEDURE getPhotoLinksByPostId*(VAR pid, scaled, full: ARRAY OF CHAR);
+VAR
+   statusMessageGuid : ARRAY 128 OF CHAR;
+   photoPath : ARRAY 128 OF CHAR;
+   photoName : ARRAY 64 OF CHAR;
+BEGIN
+   getPostGuid(pid, statusMessageGuid);
+   getPhotoPath(statusMessageGuid, photoPath);
+   getPhotoName(statusMessageGuid, photoName);
+   full := PhotoPath;
+   Strings.Assign(full, photoName);
+   scaled := photoName;
+   Strings.Assign("scaled_full_", scaled);
+   Strings.Assign(photoName, scaled);
+END getPhotoLinksByPostId;
+
 BEGIN
   postgres.setUser("diaspora");
   postgres.setDatabase("diaspora_production");
