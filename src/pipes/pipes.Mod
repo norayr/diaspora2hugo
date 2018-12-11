@@ -6,16 +6,16 @@ MODULE pipes;
     EOF* = -1;
 
   TYPE 
-    File = SYSTEM.ADDRESS;
+  File = SYSTEM.ADDRESS;
 	Files = ARRAY 64 OF File; (* should be enough to hold FILE struct *)
 	PtrFile = POINTER TO Files;
 	Pchar = POINTER TO ARRAY OF CHAR;
    
-   Text* = POINTER TO TextDesc;
+  Text* = POINTER TO TextDesc;
 
-   TextDesc* = RECORD;
+  TextDesc* = RECORD;
      text- : PtrFile;
-	 eof-  : BOOLEAN;
+  	 eof-  : BOOLEAN;
    END;
 
 PROCEDURE -Astdio '#include <stdio.h>';
@@ -32,10 +32,10 @@ BEGIN
    i := 0;
    REPEAT
      p[i] := s[i];
-	 INC(i)
+     INC(i)
    UNTIL i = l-2;
-     INC(i);
-     p[i] := Ascii.nul; 
+   INC(i);
+   p[i] := Ascii.nul; 
    RETURN p;
 END OberonStringtoPchar;
 
@@ -52,7 +52,7 @@ END dumpChars;
 PROCEDURE -popen (VAR command, modes : ARRAY OF CHAR) : PtrFile "popen((char*)command, (char*)modes)";
 
 PROCEDURE Popen*(VAR t: Text; VAR command: ARRAY OF CHAR; mode: CHAR);
-  VAR
+VAR
 	cmd : ARRAY 256 OF CHAR;
 	md  : ARRAY 2 OF CHAR;
 BEGIN
@@ -91,8 +91,8 @@ BEGIN
 END Read;
 
 PROCEDURE ReadLine*(VAR(*CONST*) f : Text; VAR s : ARRAY OF CHAR);
-  VAR
-    i: INTEGER;
+VAR
+  i: INTEGER;
 	ch: CHAR;
 	eol: BOOLEAN;
 BEGIN
@@ -101,18 +101,18 @@ BEGIN
   REPEAT
     Read(f, ch);
     IF (ch = Ascii.cr) OR (ch = Ascii.lf) OR (i = LEN(s) - 1) OR f.eof THEN eol := TRUE END;
-	IF eol THEN
-	  s[i] := Ascii.nul
-	ELSE
-	  s[i] := ch
-	END;
-	INC(i)
+    IF eol THEN
+	    s[i] := Ascii.nul
+	  ELSE
+	    s[i] := ch
+	  END;
+	  INC(i)
   UNTIL eol;
 END ReadLine;
 
 PROCEDURE isEOF*(VAR(*CONST*) f: Text): BOOLEAN;
 BEGIN
-RETURN f.eof;
+  RETURN f.eof;
 END isEOF;
 
 

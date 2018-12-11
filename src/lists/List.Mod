@@ -4,35 +4,36 @@ IMPORT S := Sys;
 
 TYPE 
      TObject* = S.TObject;
-      integer*= S.integer;
+     integer* = S.integer;
 
         Node* = POINTER TO NodeDesc;
 
     NodeDesc* = RECORD
          obj* : TObject;
         next* : Node;
-	END;
+	  END;
 
-           TList* = POINTER TO TListDesc;
+       TList* = POINTER TO TListDesc;
 
-       TListDesc* = RECORD (S.TObjectDesc)
-          Create* : PROCEDURE () : TList;
-            Free* : PROCEDURE (l : TList);
-	   Clear* : PROCEDURE (l : TList);
-             Add* : PROCEDURE (l : TList; s : TObject) : integer;
-          Append* : PROCEDURE (l : TList; s : TObject);
-          AppendList* : PROCEDURE (src, dst : TList);
-	  Insert* : PROCEDURE (l : TList; i : integer; s : TObject);
-          Delete* : PROCEDURE (l : TList; i : integer);
-           Empty* : PROCEDURE (l : TList) : BOOLEAN;
-             Get* : PROCEDURE (l : TList; k : integer) : Node;
-    First*, Last* : Node;
-             res* : BOOLEAN;
-           Count* : integer;
+   TListDesc* = RECORD (S.TObjectDesc)
+      Create* : PROCEDURE () : TList;
+        Free* : PROCEDURE (l : TList);
+       Clear* : PROCEDURE (l : TList);
+         Add* : PROCEDURE (l : TList; s : TObject) : integer;
+      Append* : PROCEDURE (l : TList; s : TObject);
+  AppendList* : PROCEDURE (src, dst : TList);
+      Insert* : PROCEDURE (l : TList; i : integer; s : TObject);
+      Delete* : PROCEDURE (l : TList; i : integer);
+       Empty* : PROCEDURE (l : TList) : BOOLEAN;
+         Get* : PROCEDURE (l : TList; k : integer) : Node;
+First*, Last* : Node;
+         res* : BOOLEAN;
+       Count* : integer;
    END;
 
  PROCEDURE Add* ( l : TList; s : TObject) : integer;
- VAR e : Node;
+ VAR
+   e : Node;
  BEGIN
     l.res := FALSE;
     NEW(e);
@@ -70,24 +71,25 @@ TYPE
  VAR e : Node;
      i : integer;
  BEGIN
-    l.res := FALSE;
-	IF s # NIL THEN
-	  i := 0;
-	  REPEAT
-        e := s.Get(s, i);
-		IF e # NIL THEN
-          l.Append(l, e.obj);
-		END;
-	    INC(i);
-	  UNTIL (i = s.Count) OR (e = NIL);
-    END
+   l.res := FALSE;
+   IF s # NIL THEN
+	   i := 0;
+	   REPEAT
+       e := s.Get(s, i);
+		   IF e # NIL THEN
+         l.Append(l, e.obj);
+		   END;
+	     INC(i);
+	   UNTIL (i = s.Count) OR (e = NIL);
+   END
  END AppendList;
 
 
 
  PROCEDURE Insert*(l : TList; i : integer; s : TObject);
-    VAR e, u, p : Node;
-        j : integer;
+ VAR
+   e, u, p : Node;
+         j : integer;
  BEGIN
     l.res := FALSE; 
     NEW(e);

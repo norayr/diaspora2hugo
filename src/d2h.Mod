@@ -40,7 +40,7 @@ BEGIN
  END
 END parseArgs;
 
-PROCEDURE main;
+PROCEDURE test;
  VAR userID: ARRAY 5 OF CHAR;
  username: ARRAY 16 OF CHAR;
  postIDs, text, tags: StringList.TStringList;
@@ -70,6 +70,39 @@ BEGIN
   ELSE
     Out.String("post has no photo"); Out.Ln
   END;
+
+END test;
+
+PROCEDURE main;
+VAR
+ userID, postID: ARRAY 8 OF CHAR;
+ username: ARRAY 16 OF CHAR;
+ postIDs, text, tags: StringList.TStringList;
+ time: ARRAY 32 OF CHAR;
+ photoFull, photoScaled: ARRAY 128 OF CHAR;
+ i : LONGINT;
+ e : StringList.Node;
+ L : StringList.TList;
+BEGIN
+  parseArgs(username);
+  diasporadb.getUserID(username, userID);
+  postIDs := diasporadb.getListOfPosts(userID, TRUE);
+  Out.String("postids count "); Out.Int(postIDs.Count, 0); Out.Ln;
+  (*list(postIDs);*)
+  NEW(e); NEW(L);
+  L := postIDs;
+  i := 0;
+  REPEAT
+    Out.Int(i, 0); Out.Ln;
+	  e := postIDs.Get(L, i);
+    IF e # NIL THEN
+	    Out.String (e.obj(StringList.TString).str); Out.Ln;
+      Strings.Assign(e.obj(StringList.TString).str, postID);
+		  Out.String(postID); Out.Ln;
+	    (*text := diasporadb.getText(postIDs);*)
+    END;
+    INC(i);
+  UNTIL i = postIDs.Count;
 END main;
 
 BEGIN
