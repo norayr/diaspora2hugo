@@ -82,6 +82,7 @@ TYPE
     l.Count   := 0;
     l.Add     := List.Add;
     l.Append  := List.Append;
+    l.AppendList  := List.AppendList;
     l.Clear   := List.Clear;
     l.Free    := List.Free;
     l.Insert  := List.Insert;

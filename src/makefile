@@ -9,6 +9,7 @@ all:
 		../pipes/pipes.Mod \
 		../postgres/postgres.Mod \
 		../diaspora/diasporadb.Mod \
+		../diaspora/diasporaPost.Mod \
 		../d2h.Mod -m
 		cd build && voc ../tests.Mod -m
 clean:

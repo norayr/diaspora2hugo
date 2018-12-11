@@ -1,7 +1,8 @@
 MODULE d2h;
 IMPORT Out, Args, Strings := oocStrings,
        StringList,
-       diasporadb;
+       diasporadb,
+	   diasporaPost;
 
 PROCEDURE list(VAR s : StringList.TStringList);
 VAR e : StringList.Node;
@@ -20,6 +21,8 @@ BEGIN
    UNTIL i = s.Count;
 END list;
 
+
+
 PROCEDURE help;
 BEGIN
   Out.String("usage:"); Out.Ln;
@@ -37,12 +40,6 @@ BEGIN
  END
 END parseArgs;
 
-PROCEDURE findTags(VAR text, tags: StringList.TStringList);
-
-BEGIN
-
-END findTags;
-
 PROCEDURE main;
  VAR userID: ARRAY 5 OF CHAR;
  username: ARRAY 16 OF CHAR;
@@ -56,7 +53,8 @@ BEGIN
   text := diasporadb.getText("455122");
   list(text);
   tags := StringList.Create();
-  findTags(text, tags);
+  tags := diasporaPost.findTags(text);
+  list(tags);
   diasporadb.getCreationTime("455122", time);
   Out.String(time); Out.Ln;
   time[10] := 'T';

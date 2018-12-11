@@ -20,7 +20,8 @@ TYPE
             Free* : PROCEDURE (l : TList);
 	   Clear* : PROCEDURE (l : TList);
              Add* : PROCEDURE (l : TList; s : TObject) : integer;
-          Append* : PROCEDURE (l : TList; s : TObject);	     
+          Append* : PROCEDURE (l : TList; s : TObject);
+          AppendList* : PROCEDURE (src, dst : TList);
 	  Insert* : PROCEDURE (l : TList; i : integer; s : TObject);
           Delete* : PROCEDURE (l : TList; i : integer);
            Empty* : PROCEDURE (l : TList) : BOOLEAN;
@@ -64,6 +65,25 @@ TYPE
     INC(l.Count);
     l.res := TRUE
  END Append;
+
+ PROCEDURE AppendList* (s, l : TList);
+ VAR e : Node;
+     i : integer;
+ BEGIN
+    l.res := FALSE;
+	IF s # NIL THEN
+	  i := 0;
+	  REPEAT
+        e := s.Get(s, i);
+		IF e # NIL THEN
+          l.Append(l, e.obj);
+		END;
+	    INC(i);
+	  UNTIL (i = s.Count) OR (e = NIL);
+    END
+ END AppendList;
+
+
 
  PROCEDURE Insert*(l : TList; i : integer; s : TObject);
     VAR e, u, p : Node;
@@ -162,6 +182,7 @@ PROCEDURE Empty* (l : TList) : BOOLEAN;
     l.Count   := 0;
     l.Add     := Add;
     l.Append  := Append;
+    l.AppendList  := AppendList;
     l.Clear   := Clear;
     l.Free    := Free;
     l.Insert  := Insert;
