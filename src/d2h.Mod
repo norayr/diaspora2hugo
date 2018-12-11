@@ -45,6 +45,7 @@ PROCEDURE main;
  username: ARRAY 16 OF CHAR;
  postIDs, text, tags: StringList.TStringList;
  time: ARRAY 32 OF CHAR;
+ photoFull, photoScaled: ARRAY 128 OF CHAR;
 BEGIN
   parseArgs(username);
   diasporadb.getUserID(username, userID);
@@ -60,6 +61,9 @@ BEGIN
   time[10] := 'T';
   Strings.Append("+04:00", time);
   Out.String(time); Out.Ln;
+  diasporadb.getPhotoLinksByPostId("3389030", photoFull, photoScaled);
+  Out.String(photoFull); Out.Ln;
+  Out.String(photoScaled); Out.Ln;
 END main;
 
 BEGIN

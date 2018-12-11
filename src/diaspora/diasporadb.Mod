@@ -119,7 +119,7 @@ END getPostGuid;
 
 PROCEDURE getPhotoPath*(VAR guid, photoPath: ARRAY OF CHAR);
 VAR
-  cmd: ARRAY 64 OF CHAR;
+  cmd: ARRAY 128 OF CHAR;
 BEGIN
   cmd := "SELECT remote_photo_path FROM photos WHERE status_message_guid='";
   Strings.Append(guid, cmd);
@@ -130,16 +130,16 @@ END getPhotoPath;
 
 PROCEDURE getPhotoName*(VAR guid, photoName: ARRAY OF CHAR);
 VAR
-  cmd: ARRAY 64 OF CHAR;
+  cmd: ARRAY 128 OF CHAR;
 BEGIN
-  cmd := "SELECT remote_photo_path FROM photos WHERE status_message_guid='";
+  cmd := "SELECT remote_photo_name FROM photos WHERE status_message_guid='";
   Strings.Append(guid, cmd);
   Strings.Append("';", cmd);
   Out.String(cmd); Out.Ln;
   postgres.queryL(cmd, photoName);
 END getPhotoName;
 
-PROCEDURE getPhotoLinksByPostId*(VAR pid, scaled, full: ARRAY OF CHAR);
+PROCEDURE getPhotoLinksByPostId*(pid: ARRAY OF CHAR; VAR full, scaled: ARRAY OF CHAR);
 VAR
    statusMessageGuid : ARRAY 128 OF CHAR;
    photoPath : ARRAY 128 OF CHAR;
@@ -148,9 +148,9 @@ BEGIN
    getPostGuid(pid, statusMessageGuid);
    getPhotoPath(statusMessageGuid, photoPath);
    getPhotoName(statusMessageGuid, photoName);
-   full := PhotoPath;
+   COPY(photoPath, full);
    Strings.Assign(full, photoName);
-   scaled := photoName;
+   COPY(photoName, scaled);
    Strings.Assign("scaled_full_", scaled);
    Strings.Assign(photoName, scaled);
 END getPhotoLinksByPostId;
