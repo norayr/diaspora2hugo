@@ -126,6 +126,7 @@ BEGIN
   Strings.Append("';", cmd);
   Out.String(cmd); Out.Ln;
   postgres.queryL(cmd, photoPath);
+  IF photoPath[0] = '-' THEN Strings.Assign("", photoPath) END;
 END getPhotoPath;
 
 PROCEDURE getPhotoName*(VAR guid, photoName: ARRAY OF CHAR);
@@ -137,22 +138,29 @@ BEGIN
   Strings.Append("';", cmd);
   Out.String(cmd); Out.Ln;
   postgres.queryL(cmd, photoName);
+  IF photoName[0] = '-' THEN Strings.Assign("", photoName) END;
 END getPhotoName;
 
-PROCEDURE getPhotoLinksByPostId*(pid: ARRAY OF CHAR; VAR full, scaled: ARRAY OF CHAR);
+PROCEDURE getPhotoLinksByPostId*(pid: ARRAY OF CHAR; VAR full, scaled: ARRAY OF CHAR): BOOLEAN;
 VAR
    statusMessageGuid : ARRAY 128 OF CHAR;
    photoPath : ARRAY 128 OF CHAR;
    photoName : ARRAY 64 OF CHAR;
+   b : BOOLEAN;
 BEGIN
+   b := FALSE;
    getPostGuid(pid, statusMessageGuid);
    getPhotoPath(statusMessageGuid, photoPath);
    getPhotoName(statusMessageGuid, photoName);
    Strings.Assign(photoPath, full);
    Strings.Append(photoName, full);
    Strings.Assign(photoPath, scaled);
-   Strings.Append("scaled_full_", scaled);
+   IF photoPath # "" THEN
+     Strings.Append("scaled_full_", scaled);
+	 b := TRUE
+   END;
    Strings.Append(photoName, scaled);
+   RETURN b
 END getPhotoLinksByPostId;
 
 BEGIN

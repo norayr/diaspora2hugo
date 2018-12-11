@@ -61,9 +61,13 @@ BEGIN
   time[10] := 'T';
   Strings.Append("+04:00", time);
   Out.String(time); Out.Ln;
-  diasporadb.getPhotoLinksByPostId("3389030", photoFull, photoScaled);
-  Out.String(photoFull); Out.Ln;
-  Out.String(photoScaled); Out.Ln;
+  (*diasporadb.getPhotoLinksByPostId("3389030", photoFull, photoScaled);*)
+  IF diasporadb.getPhotoLinksByPostId("455122", photoFull, photoScaled) THEN
+    Out.String(photoFull); Out.Ln;
+    Out.String(photoScaled); Out.Ln;
+  ELSE
+    Out.String("post has no photo"); Out.Ln
+  END;
 END main;
 
 BEGIN
