@@ -197,7 +197,6 @@ BEGIN
     END;
     INC(i);
   UNTIL i = postIDs.Count;
-  (*UNTIL i = 3*);
 END main;
 
 BEGIN

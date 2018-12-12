@@ -62,7 +62,8 @@ BEGIN
         found2 := FALSE; EOL := FALSE;
         j := i;
         REPEAT
-          IF stringToSearch[j] = " " THEN
+          IF (ORD(stringToSearch[j]) >= 32) & (ORD(stringToSearch[j]) <= 47)
+           & (ORD(stringToSearch[j]) # 45)  THEN
             found2 := TRUE
           END;
           IF (ORD(stringToSearch[j]) < 32) THEN
