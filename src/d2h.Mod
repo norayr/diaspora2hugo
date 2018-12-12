@@ -107,6 +107,7 @@ BEGIN
         diasporadb.getPostGuid(postID, guid);
         diasporadb.getCreationTime(postID, time);
         Strings.Append("+04:00", time);
+        time[10] := 'T';
         Strings.Extract(time, 0, 4, year);
         Strings.Assign("/", url);
         Strings.Append(year, url);
