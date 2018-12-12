@@ -88,7 +88,7 @@ END WriteChar;
 
 PROCEDURE WriteString(VAR r : Files.Rider; str : ARRAY OF CHAR);
 BEGIN
-   Files.WriteBytes(r, str, LEN(str)-1);
+   Files.WriteBytes(r, str, Strings.Length(str));
    Out.String(str);
 END WriteString;
 
@@ -154,7 +154,7 @@ BEGIN
         Files.Set(R, F, 0);
         WriteString(R, "---"); WriteChar(R, 0AX);
         WriteString(R, "title: "); WriteString(R, title); WriteChar(R, 0AX);
-        WriteString(R, "author: "); WriteString(R, author); WriteChar(R, 0AX);
+        WriteString(R, "author: "); (*Files.WriteString(R, author);*) WriteString(R, author); WriteChar(R, 0AX);
         WriteString(R, "type: post");  WriteChar(R, 0AX);
         WriteString(R, "date: "); WriteString(R, time); WriteChar(R, 0AX);
         WriteString(R, "url: "); WriteString(R, url); WriteChar(R, 0AX);
@@ -203,7 +203,7 @@ BEGIN
         WriteChar(R, 0AX);
         WriteChar(R, 0AX);
         WriteChar(R, 0AX);
-        WriteString(R, "[բնօրինակ (մեկնաբանութիւննե՞ր)](");
+        WriteString(R, "[բնօրինակ սփիւռքում(եւ մեկնաբանութիւննե՞ր)](");
         WriteString(R, purl);
         WriteString(R, guid);
         WriteString(R, ")");
