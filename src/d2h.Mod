@@ -33,52 +33,25 @@ END list;
 PROCEDURE help;
 BEGIN
   Out.String("usage:"); Out.Ln;
-  Out.String("./d2h username"); Out.Ln;
+  Out.String("./d2h username [postid]"); Out.Ln;
+  Out.Ln;
+  Out.String("if optional postid argument given, then hugo files will be generated starting from that post."); Out.Ln;
   Out.Ln;
 END help;
 
-PROCEDURE parseArgs(VAR u: ARRAY OF CHAR);
+PROCEDURE parseArgs(VAR u, sposid: ARRAY OF CHAR);
 BEGIN
  IF Args.argc > 1 THEN
-   Args.Get(1, u)
+   Args.Get(1, u);
+   IF Args.argc > 2 THEN
+   Args.Get(2, sposid)
+   END
  ELSE
    help;
    HALT(1)
  END
 END parseArgs;
 
-PROCEDURE test;
- VAR userID: ARRAY 5 OF CHAR;
- username: ARRAY 16 OF CHAR;
- postIDs, text, tags: StringList.TStringList;
- time: ARRAY 32 OF CHAR;
- photoFull, photoScaled: ARRAY 128 OF CHAR;
- testPid: ARRAY 12 OF CHAR;
-BEGIN
-  testPid := "3389030";
-  (*testPid := "455122");*)
-  parseArgs(username);
-  diasporadb.getUserID(username, userID);
-  postIDs := diasporadb.getListOfPosts(userID, FALSE);
-  list(postIDs);
-  text := diasporadb.getText(testPid);
-  list(text);
-  tags := StringList.Create();
-  tags := diasporaPost.findTags(text);
-  list(tags);
-  diasporadb.getCreationTime(testPid, time);
-  Out.String(time); Out.Ln;
-  time[10] := 'T';
-  Strings.Append("+04:00", time);
-  Out.String(time); Out.Ln;
-  IF diasporadb.getPhotoLinksByPostId(testPid, photoFull, photoScaled) THEN
-    Out.String(photoFull); Out.Ln;
-    Out.String(photoScaled); Out.Ln;
-  ELSE
-    Out.String("post has no photo"); Out.Ln
-  END;
-
-END test;
 
 PROCEDURE WriteChar(VAR r : Files.Rider; ch : CHAR);
 BEGIN
@@ -95,7 +68,7 @@ END WriteString;
 PROCEDURE main;
 VAR
  userID, postID: ARRAY 8 OF CHAR;
- username: ARRAY 16 OF CHAR;
+ username, sposid: ARRAY 16 OF CHAR;
  postIDs, text, tags: StringList.TStringList;
  time: ARRAY 32 OF CHAR;
  url: ARRAY 16 OF CHAR;
@@ -108,8 +81,12 @@ VAR
  L, Lt : StringList.TList;
  F : Files.File; R : Files.Rider;
  filename : ARRAY 128 OF CHAR;
+ process: BOOLEAN;
 BEGIN
-  parseArgs(username);
+  process := TRUE;
+  Strings.Assign("", sposid);
+  parseArgs(username, sposid);
+  IF sposid # "" THEN process := FALSE END;
   diasporadb.getUserID(username, userID);
   postIDs := diasporadb.getListOfPosts(userID, TRUE);
   Out.String("postids count "); Out.Int(postIDs.Count, 0); Out.Ln;
@@ -122,99 +99,104 @@ BEGIN
 	  e := postIDs.Get(L, i);
     IF e # NIL THEN
       Strings.Assign(e.obj(StringList.TString).str, postID);
-		  Out.String(postID); Out.Ln;
-      diasporadb.getPostGuid(postID, guid);
-      diasporadb.getCreationTime(postID, time);
-      Strings.Append("+04:00", time);
-      Strings.Extract(time, 0, 4, year);
-      Strings.Assign(year, url);
-      Strings.Append("/", url);
-      Strings.Extract(time, 5, 2, month);
-      Strings.Append(month, url);
-      Strings.Append("/", url);
-      Strings.Extract(time, 8, 2, day);
-      Strings.Append(day, url);
-      Strings.Append("/", url);
-      Strings.Append(postID, url);
-      Strings.Append("/", url);
-      Out.String(time); Out.Ln;
-      Out.String(url); Out.Ln;
-	    text := diasporadb.getText(postID);
-      (* now generating the header *)
-      Strings.Assign(year, filename);
-      Strings.Append("-", filename);
-      Strings.Append(month, filename);
-      Strings.Append("-", filename);
-      Strings.Append(day, filename);
-      Strings.Append("_", filename);
-      Strings.Append(postID, filename);
-      Strings.Append("_spyurk.md", filename);
-      F := Files.New(filename);
-      IF F # NIL THEN
-        Files.Set(R, F, 0);
-        WriteString(R, "---"); WriteChar(R, 0AX);
-        WriteString(R, "title: "); WriteString(R, title); WriteChar(R, 0AX);
-        WriteString(R, "author: "); (*Files.WriteString(R, author);*) WriteString(R, author); WriteChar(R, 0AX);
-        WriteString(R, "type: post");  WriteChar(R, 0AX);
-        WriteString(R, "date: "); WriteString(R, time); WriteChar(R, 0AX);
-        WriteString(R, "url: "); WriteString(R, url); WriteChar(R, 0AX);
-        WriteString(R, "categories:"); WriteChar(R, 0AX);
-        WriteString(R, "  - ");
-        WriteString(R, defcat); WriteChar(R, 0AX);
-        WriteString(R, "tags:"); WriteChar(R, 0AX);
-        tags := diasporaPost.findTags(text);
-        NEW(et); NEW(Lt);
-        Lt := tags;
-        j := 0;
-        REPEAT
-          et := tags.Get(Lt, j);
-          IF et # NIL THEN
-            Strings.Assign(et.obj(StringList.TString).str, tag);
-            WriteString(R, "  - "); WriteString(R, tag); WriteChar(R, 0AX);
-          END;
-          INC(j);
-        UNTIL j = tags.Count;
-        WriteString(R, "---"); WriteChar(R, 0AX);
+      IF ~process & (postID = sposid) THEN process := TRUE END;
+      IF ~process THEN
+        Out.String("skipping post id "); Out.String(postID); Out.Ln;
+      ELSE
+        Out.String(postID); Out.Ln;
+        diasporadb.getPostGuid(postID, guid);
+        diasporadb.getCreationTime(postID, time);
+        Strings.Append("+04:00", time);
+        Strings.Extract(time, 0, 4, year);
+        Strings.Assign(year, url);
+        Strings.Append("/", url);
+        Strings.Extract(time, 5, 2, month);
+        Strings.Append(month, url);
+        Strings.Append("/", url);
+        Strings.Extract(time, 8, 2, day);
+        Strings.Append(day, url);
+        Strings.Append("/", url);
+        Strings.Append(postID, url);
+        Strings.Append("/", url);
+        Out.String(time); Out.Ln;
+        Out.String(url); Out.Ln;
+        text := diasporadb.getText(postID);
+        (* now generating the header *)
+        Strings.Assign(year, filename);
+        Strings.Append("-", filename);
+        Strings.Append(month, filename);
+        Strings.Append("-", filename);
+        Strings.Append(day, filename);
+        Strings.Append("_", filename);
+        Strings.Append(postID, filename);
+        Strings.Append("_spyurk.md", filename);
+        F := Files.New(filename);
+        IF F # NIL THEN
+          Files.Set(R, F, 0);
+          WriteString(R, "---"); WriteChar(R, 0AX);
+          WriteString(R, "title: "); WriteString(R, title); WriteChar(R, 0AX);
+          WriteString(R, "author: "); (*Files.WriteString(R, author);*) WriteString(R, author); WriteChar(R, 0AX);
+          WriteString(R, "type: post");  WriteChar(R, 0AX);
+          WriteString(R, "date: "); WriteString(R, time); WriteChar(R, 0AX);
+          WriteString(R, "url: "); WriteString(R, url); WriteChar(R, 0AX);
+          WriteString(R, "categories:"); WriteChar(R, 0AX);
+          WriteString(R, "  - ");
+          WriteString(R, defcat); WriteChar(R, 0AX);
+          WriteString(R, "tags:"); WriteChar(R, 0AX);
+          tags := diasporaPost.findTags(text);
+          NEW(et); NEW(Lt);
+          Lt := tags;
+          j := 0;
+          REPEAT
+            et := tags.Get(Lt, j);
+            IF et # NIL THEN
+              Strings.Assign(et.obj(StringList.TString).str, tag);
+              WriteString(R, "  - "); WriteString(R, tag); WriteChar(R, 0AX);
+            END;
+            INC(j);
+          UNTIL j = tags.Count;
+          WriteString(R, "---"); WriteChar(R, 0AX);
 
-        IF diasporadb.getPhotoLinksByPostId(postID, photoFull, photoScaled) THEN
-          Out.String(photoFull); Out.Ln;
-          Out.String(photoScaled); Out.Ln;
-          WriteString(R, '{{< figure link="');
-          WriteString(R, photoFull);
-          WriteString(R, '" src="');
-          WriteString(R, photoScaled);
-          WriteString(R, '" width="100%" >}}'); WriteChar(R, 0AX); WriteChar(R, 0AX);
-        ELSE
-          Out.String("post has no photo"); Out.Ln
-        END;
-       
-        NEW(et); NEW(Lt);
-        Lt := text;
-        j := 0;
-        REPEAT
-          et := text.Get(Lt, j);
-          IF et # NIL THEN
-            Strings.Assign(et.obj(StringList.TString).str, line);
-            WriteString(R, line); WriteChar(R, 0AX);
+          IF diasporadb.getPhotoLinksByPostId(postID, photoFull, photoScaled) THEN
+            Out.String(photoFull); Out.Ln;
+            Out.String(photoScaled); Out.Ln;
+            WriteString(R, '{{< figure link="');
+            WriteString(R, photoFull);
+            WriteString(R, '" src="');
+            WriteString(R, photoScaled);
+            WriteString(R, '" width="100%" >}}'); WriteChar(R, 0AX); WriteChar(R, 0AX);
+          ELSE
+            Out.String("post has no photo"); Out.Ln
           END;
-          INC(j);
-        UNTIL j = text.Count;
-        
-        WriteChar(R, 0AX);
-        WriteChar(R, 0AX);
-        WriteChar(R, 0AX);
-        WriteString(R, "[բնօրինակ սփիւռքում(եւ մեկնաբանութիւննե՞ր)](");
-        WriteString(R, purl);
-        WriteString(R, guid);
-        WriteString(R, ")");
-        WriteChar(R, 0AX);
-      END;
-      Files.Register(F);
-      (*Files.Close(F);*)
+         
+          NEW(et); NEW(Lt);
+          Lt := text;
+          j := 0;
+          REPEAT
+            et := text.Get(Lt, j);
+            IF et # NIL THEN
+              Strings.Assign(et.obj(StringList.TString).str, line);
+              WriteString(R, line); WriteChar(R, 0AX);
+            END;
+            INC(j);
+          UNTIL j = text.Count;
+          
+          WriteChar(R, 0AX);
+          WriteChar(R, 0AX);
+          WriteChar(R, 0AX);
+          WriteString(R, "[բնօրինակ սփիւռքում(եւ մեկնաբանութիւննե՞ր)](");
+          WriteString(R, purl);
+          WriteString(R, guid);
+          WriteString(R, ")");
+          WriteChar(R, 0AX);
+        END;
+        Files.Register(F);
+        (*Files.Close(F);*)
+      END; (* if process or not *)
     END;
     INC(i);
-  (*UNTIL i = postIDs.Count;*)
-  UNTIL i = 3;
+  UNTIL i = postIDs.Count;
+  (*UNTIL i = 3*);
 END main;
 
 BEGIN

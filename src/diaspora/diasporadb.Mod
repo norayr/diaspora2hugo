@@ -2,6 +2,43 @@ MODULE diasporadb;
 
 IMPORT postgres, StringList, Strings := oocStrings, strutils, Out;
 
+PROCEDURE dump(VAR str: ARRAY OF CHAR);
+VAR
+  i, l : INTEGER;
+BEGIN
+  i := 0;
+  l := Strings.Length(str);
+  REPEAT
+    Out.Char(str[i]); Out.Int(i, 5); Out.Ln;
+    INC(i)
+  UNTIL i = l;
+END dump;
+
+PROCEDURE clean(VAR strs: StringList.TStringList);
+VAR
+  e : StringList.Node;
+  L : StringList.TList;
+  i, l : INTEGER;
+BEGIN
+  NEW(e); NEW(L);
+  L := strs;
+  REPEAT
+    e := strs.Get(L, i);
+    IF e # NIL THEN
+      l := Strings.Length(e.obj(StringList.TString).str) - 1;
+      IF e.obj(StringList.TString).str[l] = '+' THEN
+        Strings.Delete(e.obj(StringList.TString).str, l, 1);
+        strutils.RemoveRightChars(e.obj(StringList.TString).str, ' ');
+        l := Strings.Length(e.obj(StringList.TString).str) - 1 ;
+        IF (e.obj(StringList.TString).str[l-1] = '\') & (e.obj(StringList.TString).str[l] = 'r') THEN
+          Strings.Delete(e.obj(StringList.TString).str, l-1, 2);
+        END;
+      END; (* clean *)
+    END;
+    INC(i)
+  UNTIL i = strs.Count;
+END clean;
+
 PROCEDURE getListOfPosts*(VAR userid: ARRAY OF CHAR; public : BOOLEAN): StringList.TStringList;
 VAR
   cmd: ARRAY 128 OF CHAR;
@@ -86,6 +123,7 @@ BEGIN
   strs.Delete(strs, strs.Count-1);
   strs.Delete(strs, strs.Count-1);
   strs.Delete(strs, strs.Count-1);
+  clean(strs);
   RETURN(strs);
 END getText;
 
