@@ -108,7 +108,8 @@ BEGIN
         diasporadb.getCreationTime(postID, time);
         Strings.Append("+04:00", time);
         Strings.Extract(time, 0, 4, year);
-        Strings.Assign(year, url);
+        Strings.Assign("/", url);
+        Strings.Append(year, url);
         Strings.Append("/", url);
         Strings.Extract(time, 5, 2, month);
         Strings.Append(month, url);
