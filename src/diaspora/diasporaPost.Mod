@@ -5,7 +5,19 @@ IMPORT (*Out,*)
        StringList;
 
 VAR tmp: ARRAY 32 OF CHAR;
-(*
+
+(*PROCEDURE dump(VAR str: ARRAY OF CHAR);
+VAR
+  i, l : INTEGER;
+BEGIN
+  i := 0;
+  l := Strings.Length(str);
+  REPEAT
+    Out.Char(str[i]); Out.Int(i, 5); Out.Ln;
+    INC(i)
+  UNTIL i = l;
+END dump;
+
 PROCEDURE list(VAR s : StringList.TStringList);
 VAR e : StringList.Node;
        i : INTEGER;
@@ -25,7 +37,7 @@ END list;
 *)
 PROCEDURE findTagsInString*(VAR stringToSearch: ARRAY OF CHAR): StringList.TStringList; 
 VAR
-    tag: ARRAY 32 OF CHAR;
+    tag: ARRAY 256 OF CHAR;
     found, found2, EOL: BOOLEAN;
     posOfPattern, posOfPattern2: INTEGER;
     i, j: INTEGER;
