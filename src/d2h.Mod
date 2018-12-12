@@ -71,7 +71,7 @@ VAR
  username, sposid: ARRAY 16 OF CHAR;
  postIDs, text, tags: StringList.TStringList;
  time: ARRAY 32 OF CHAR;
- url: ARRAY 16 OF CHAR;
+ url: ARRAY 64 OF CHAR;
  year, month, day: ARRAY 8 OF CHAR;
  guid, tag: ARRAY 128 OF CHAR;
  line: StringList.string;
