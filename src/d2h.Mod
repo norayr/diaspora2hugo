@@ -142,19 +142,21 @@ BEGIN
           WriteString(R, "categories:"); WriteChar(R, 0AX);
           WriteString(R, "  - ");
           WriteString(R, defcat); WriteChar(R, 0AX);
-          WriteString(R, "tags:"); WriteChar(R, 0AX);
           tags := diasporaPost.findTags(text);
-          NEW(et); NEW(Lt);
-          Lt := tags;
-          j := 0;
-          REPEAT
-            et := tags.Get(Lt, j);
-            IF et # NIL THEN
-              Strings.Assign(et.obj(StringList.TString).str, tag);
-              WriteString(R, "  - "); WriteString(R, tag); WriteChar(R, 0AX);
-            END;
-            INC(j);
-          UNTIL j = tags.Count;
+          IF tags.Count > 0 THEN
+            WriteString(R, "tags:"); WriteChar(R, 0AX);
+            NEW(et); NEW(Lt);
+            Lt := tags;
+            j := 0;
+            REPEAT
+              et := tags.Get(Lt, j);
+              IF et # NIL THEN
+                Strings.Assign(et.obj(StringList.TString).str, tag);
+                WriteString(R, "  - "); WriteString(R, tag); WriteChar(R, 0AX);
+              END;
+              INC(j);
+            UNTIL j = tags.Count;
+          END;
           WriteString(R, "---"); WriteChar(R, 0AX);
 
           IF diasporadb.getPhotoLinksByPostId(postID, photoFull, photoScaled) THEN
