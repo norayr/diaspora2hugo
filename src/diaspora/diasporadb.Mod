@@ -159,7 +159,7 @@ BEGIN
   Strings.Append("';", cmd);
   Out.String(cmd); Out.Ln;
   postgres.queryL(cmd, authorid);
-END getAuthorId;
+END getAuthorID;
 
 PROCEDURE getPostGuid*(VAR id, guid: ARRAY OF CHAR);
 VAR
