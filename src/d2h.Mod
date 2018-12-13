@@ -188,7 +188,7 @@ BEGIN
           WriteChar(R, 0AX);
           WriteChar(R, 0AX);
           WriteChar(R, 0AX);
-          WriteString(R, "-----------------------"); WriteChar(R, 0AX);
+          (*WriteString(R, "-----------------------"); WriteChar(R, 0AX);*)
           WriteString(R, "[բնօրինակ սփիւռքում(եւ մեկնաբանութիւննե՞ր)](");
           WriteString(R, purl);
           WriteString(R, guid);
