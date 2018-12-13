@@ -67,7 +67,7 @@ END WriteString;
 
 PROCEDURE main;
 VAR
- userID, postID: ARRAY 8 OF CHAR;
+ userID, authorID, postID: ARRAY 8 OF CHAR;
  username, sposid: ARRAY 16 OF CHAR;
  postIDs, text, tags: StringList.TStringList;
  time: ARRAY 32 OF CHAR;
@@ -88,7 +88,8 @@ BEGIN
   parseArgs(username, sposid);
   IF sposid # "" THEN process := FALSE END;
   diasporadb.getUserID(username, userID);
-  postIDs := diasporadb.getListOfPosts(userID, TRUE);
+  diasporadb.getAuthorID(userID, authorID);
+  postIDs := diasporadb.getListOfPosts(authorID, TRUE);
   Out.String("postids count "); Out.Int(postIDs.Count, 0); Out.Ln;
   (*list(postIDs);*)
   NEW(e); NEW(L);

@@ -150,6 +150,17 @@ BEGIN
   postgres.queryL(cmd, userID);
 END getUserID;
 
+PROCEDURE getAuthorID*(VAR ownerid, authorid: ARRAY OF CHAR);
+VAR
+  cmd: ARRAY 64 OF CHAR;
+BEGIN
+  cmd := "SELECT id FROM people WHERE owner_id='";
+  Strings.Append(ownerid, cmd);
+  Strings.Append("';", cmd);
+  Out.String(cmd); Out.Ln;
+  postgres.queryL(cmd, authorid);
+END getAuthorId;
+
 PROCEDURE getPostGuid*(VAR id, guid: ARRAY OF CHAR);
 VAR
   cmd: ARRAY 64 OF CHAR;
