@@ -63,7 +63,7 @@ BEGIN
         j := i;
         REPEAT
           IF (ORD(stringToSearch[j]) >= 32) & (ORD(stringToSearch[j]) <= 47)
-           & (ORD(stringToSearch[j]) # 45) & 
+           & (ORD(stringToSearch[j]) # 45) OR 
            (ORD(stringToSearch[j]) >= 58) & (ORD(stringToSearch[j]) <= 64) THEN
             found2 := TRUE
           END;
