@@ -3,7 +3,7 @@ IMPORT Out, Args, Strings := oocStrings,
        StringList,
        diasporadb,
 	   diasporaPost,
-     Files;
+     Files, oocIntStr;
 
 CONST
   title = "…";
@@ -69,6 +69,8 @@ PROCEDURE main;
 VAR
  userID, authorID, postID: ARRAY 8 OF CHAR;
  username, sposid: ARRAY 16 OF CHAR;
+ postIDnum, sposidnum: LONGINT;
+ res: SHORTINT;
  postIDs, text, tags: StringList.TStringList;
  time: ARRAY 32 OF CHAR;
  url: ARRAY 64 OF CHAR;
@@ -86,7 +88,10 @@ BEGIN
   process := TRUE;
   Strings.Assign("", sposid);
   parseArgs(username, sposid);
+  Out.String("starting post id "); Out.String(sposid); Out.Ln;
   IF sposid # "" THEN process := FALSE END;
+  Out.String("process is ");
+  IF process THEN Out.String("true") ELSE Out.String("else"); Out.Ln END;
   diasporadb.getUserID(username, userID);
   diasporadb.getAuthorID(userID, authorID);
   postIDs := diasporadb.getListOfPosts(authorID, TRUE);
@@ -96,15 +101,24 @@ BEGIN
   L := postIDs;
   i := 0;
   REPEAT
+    process := FALSE;
     Out.Int(i, 0); Out.Ln;
 	  e := postIDs.Get(L, i);
     IF e # NIL THEN
       Strings.Assign(e.obj(StringList.TString).str, postID);
-      IF ~process & (postID = sposid) THEN process := TRUE END;
+      Out.String("comparing postID with sposid: ");
+      Out.String(postID); Out.String ("  "); Out.String(sposid); Out.Ln;
+      oocIntStr.StrToInt(postID, postIDnum, res);
+      oocIntStr.StrToInt(sposid, sposidnum, res);
+      IF res # 0 THEN Out.String("string to integer conversion failed"); HALT(1); END;
+      IF ~process & (postIDnum >= sposidnum) THEN
+        process := TRUE;
+        Out.String("setting process to true"); Out.Ln;
+      END;
       IF ~process THEN
         Out.String("skipping post id "); Out.String(postID); Out.Ln;
       ELSE
-        Out.String(postID); Out.Ln;
+        Out.String("processing "); Out.String(postID); Out.Ln;
         diasporadb.getPostGuid(postID, guid);
         diasporadb.getCreationTime(postID, time);
         Strings.Append("+04:00", time);
