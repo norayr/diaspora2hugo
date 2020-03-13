@@ -64,7 +64,7 @@ BEGIN
         REPEAT
           IF (ORD(stringToSearch[j]) >= 32) & (ORD(stringToSearch[j]) <= 47)
            & (ORD(stringToSearch[j]) # 45) OR 
-           ((ORD(stringToSearch[j]) = 213) & (ORD(stringToSearch[j+1] = 157))) OR (* բութ՝             ՝  - d5 9d    *)
+           ((ORD(stringToSearch[j]) = 213) & (ORD(stringToSearch[j+1]) = 157)) OR (* բութ՝             ՝  - d5 9d    *)
            ((ORD(stringToSearch[j]) = 214) & (ORD(stringToSearch[j+1]) = 137)) OR (* հայերէն վերջակէտ՝ ։  - d6 89    *)
            ((ORD(stringToSearch[j]) = 226) & (ORD(stringToSearch[j+1]) = 128) & (ORD(stringToSearch[j+2]) = 164)) OR (* միջակէտ՝          ․  - e2 80 a4 *)
            (ORD(stringToSearch[j]) = 58 ) OR (* երկու կէտ՝        :  - 3a       *)
