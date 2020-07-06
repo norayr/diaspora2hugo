@@ -1,0 +1,12 @@
+[submodule "dps/lists"]
+	path = dps/lists
+	url = https://github.com/norayr/lists
+[submodule "dps/pipes"]
+	path = dps/pipes
+	url = https://github.com/norayr/pipes
+[submodule "dps/diaspora"]
+	path = dps/diaspora
+	url = https://github.com/norayr/diaspora
+[submodule "dps/postgres"]
+	path = dps/postgres
+	url = https://github.com/norayr/postgres
