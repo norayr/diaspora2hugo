@@ -14,4 +14,4 @@ all:
 		make -f $(mkfile_dir_path)/dps/diaspora/makefile BUILD=$(BLD)
 		cd build && voc ../src/d2h.Mod -m
 clean:
-		cd $(BLD) && rm *
+		if [ -d "$(BUILD)" ]; then rm -rf $(BUILD); fi
