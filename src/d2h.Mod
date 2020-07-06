@@ -22,7 +22,7 @@ BEGIN
    L := s;
    REPEAT
       e := s.Get(L, i);
-      IF e # NIL THEN Out.String (e.obj(StringList.TString).str); Out.Ln END;
+      IF e # NIL THEN Out.String (e.obj(StringList.TString).str^); Out.Ln END;
       (*Out.String (e.string); Out.Ln;*)
       INC(i);
    UNTIL i = s.Count;
@@ -76,7 +76,7 @@ VAR
  url: ARRAY 64 OF CHAR;
  year, month, day: ARRAY 8 OF CHAR;
  guid, tag: ARRAY 128 OF CHAR;
- line: StringList.string;
+ line: StringList.pstring;
  photoFull, photoScaled: ARRAY 128 OF CHAR;
  i : LONGINT; j : INTEGER;
  e, et : StringList.Node;
@@ -105,7 +105,7 @@ BEGIN
     Out.Int(i, 0); Out.Ln;
 	  e := postIDs.Get(L, i);
     IF e # NIL THEN
-      Strings.Assign(e.obj(StringList.TString).str, postID);
+      Strings.Assign(e.obj(StringList.TString).str^, postID);
       Out.String("comparing postID with sposid: ");
       Out.String(postID); Out.String ("  "); Out.String(sposid); Out.Ln;
       oocIntStr.StrToInt(postID, postIDnum, res);
@@ -168,7 +168,7 @@ BEGIN
             REPEAT
               et := tags.Get(Lt, j);
               IF et # NIL THEN
-                Strings.Assign(et.obj(StringList.TString).str, tag);
+                Strings.Assign(et.obj(StringList.TString).str^, tag);
                 WriteString(R, "  - "); WriteString(R, tag); WriteChar(R, 0AX);
               END;
               INC(j);
@@ -194,8 +194,8 @@ BEGIN
           REPEAT
             et := text.Get(Lt, j);
             IF et # NIL THEN
-              Strings.Assign(et.obj(StringList.TString).str, line);
-              WriteString(R, line); WriteChar(R, 0AX);
+              line := et.obj(StringList.TString).str;
+              WriteString(R, line^); WriteChar(R, 0AX);
             END;
             INC(j);
           UNTIL j = text.Count;
