@@ -50,6 +50,16 @@ for that the usage is
 
 If you want to make sync automatically, then you can use a cron job, which calls [this](https://github.com/norayr/diaspora2hugo/blob/master/src/cron/sync_diaspora_to_matean.sh) script.
 
+it can be simplified down to
+```
+posts_path="/home/m/matean/content/post"
+hugo_path="/home/m/matean"
+d2h="/home/inky/diaspora2hugo/build/d2h"
+  cd $posts_path
+  last_post=`ls $posts_path/*spyurk.md | tail -n 1 | awk -F "_" {'print $2'}`
+  $d2h norayr $last_post
+```
+
 i use something like this ```23 5 * * * root /root/sync_diaspora_to_matean.sh```
 
 that's all folks!
