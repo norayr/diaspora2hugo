@@ -21,7 +21,7 @@ last line syncs submodule dependencies of the project.
 
 to compile it you need to use [vishap oberon compiler](https://github.com/vishaps/voc).
 
-once you have it, make sure that ```voc``` executable is in your path, cd to src directory and type ```make```.
+once you have it, make sure that ```voc``` executable is in your path, you are in the diaspora2hugo directory and type ```make```.
 
 using
 =====
