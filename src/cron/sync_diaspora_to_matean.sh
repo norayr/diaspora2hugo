@@ -1,3 +1,4 @@
+log="/tmp/sync_matean.log"
 posts_path="/home/m/matean/content/post"
 hugo_path="/home/m/matean"
 d2h="/root/diaspora2hugo/build/d2h"
