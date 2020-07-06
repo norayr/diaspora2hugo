@@ -7,9 +7,17 @@ prerequisites
 =============
 
 currently it works only with postgre database.
+you can add mysql support. (:
 
 installation
 ============
+get the source: 
+```
+git clone https://github.com/norayr/diaspora2hugo
+cd diaspora2hugo
+git submodule update --init
+```
+last line syncs submodule dependencies of the project.
 
 to compile it you need to use [vishap oberon compiler](https://github.com/vishaps/voc).
 
@@ -25,7 +33,7 @@ for that run
 d2h <username>
 ```
 
-for instance, I change to directory 'post' and run ```../build/d2h norayr``` because that's my username.
+for instance, I change to hugo posts directory 'post' and run ```../build/d2h norayr``` because that's my username.
 
 the files you get have the naming like ```2018-12-24_3407245_spyurk.md```.
 i. e. ```year-month-day_post_id_spyurk.md```.
@@ -34,7 +42,7 @@ spyurk means 'diaspora' in armenian, also it is the name of my pod. i use the sp
 
 if you'd like you can easily rename all *spyurk files with commandline utility ```rename```.
 
-consequently you'd like to extract as markdown only latest posts.
+in all consequent runs you'd like to extract as markdown only latest posts.
 
 for that the usage is
 
